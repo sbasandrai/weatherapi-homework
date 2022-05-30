@@ -37,3 +37,40 @@ function renderCity() {
     newCity.addClass("list-group-item").appendTo(cityDiv);
   });
 }
+
+//today's forecast populates to the forecast-today div (card), 5-day forecast populates to forecast-future(cards)
+//defining apiKey
+var apiKey = "f89051132db4ab1cb9f39239dc668ba0";
+
+//function to get current weather information
+function findWeather(cityInput) {
+  var queryUrl =
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
+    cityInput +
+    "&APPID=" +
+    apiKey;
+  $.ajax({
+    url: queryUrl,
+    method: "GET",
+  }).then(function (response) {
+    console.log(response);
+    continueFindingWeather(response);
+  });
+}
+
+function continueFindingWeather(response) {
+  var queryUrl2 =
+    "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+    response.coord.lat +
+    "&lon=" +
+    response.coord.lon +
+    "&APPID=" +
+    apiKey +
+    "&units=imperial";
+  $.ajax({
+    url: queryUrl2,
+    method: "GET",
+  }).then(function (response2) {
+    renderWeather(response2, response.name);
+  });
+}
