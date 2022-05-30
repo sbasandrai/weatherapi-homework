@@ -74,3 +74,93 @@ function continueFindingWeather(response) {
     renderWeather(response2, response.name);
   });
 }
+
+function renderWeather(response2, cityInput) {
+  var currentDate = $(
+    "<h2>" + cityInput + " (" + moment().format("D/M/YYYY") + ")" + "<h2>"
+  );
+  var currentTemp = $(
+    "<div>" + "Temperature: " + response2.current.temp + " &deg;F" + "</div>"
+  );
+  var currentHumidity = $(
+    "<div>" + "Humidity: " + response2.current.humidity + "%" + "</div>"
+  );
+  var currentWind = $(
+    "<div>" + "Wind Speed: " + response2.current.wind_speed + " mph" + "</div>"
+  );
+  var currentUvi = $(
+    "<div>" +
+      "UV Index: " +
+      "<span>" +
+      response2.current.uvi +
+      "</span>" +
+      "</div>"
+  );
+  var currentIcon = response2.current.weather[0].icon;
+  var weatherIcon = $("<img>").attr(
+    "src",
+    "https://openweathermap.org/img/wn/" + currentIcon + "@2x.png"
+  );
+  $("#forecast-today").removeClass("d-none");
+  $(currentDate).addClass("card-title").appendTo("#current-weather-card");
+  $(weatherIcon).appendTo("#current-weather-card");
+  $(currentTemp).addClass("card-text").appendTo("#current-weather-card");
+  $(currentHumidity).addClass("card-text").appendTo("#current-weather-card");
+  $(currentWind).addClass("card-text").appendTo("#current-weather-card");
+  $(currentUvi).addClass("card-text").appendTo("#current-weather-card");
+  if (response2.current.uvi < 4) {
+    $("span").addClass("badge badge-success");
+  }
+  if (response2.current.uvi >= 4 && response2.current.uvi < 7) {
+    $("span").addClass("badge badge-warning");
+  }
+  if (response2.current.uvi > 7) {
+    $("span").addClass("badge badge-danger");
+  }
+}
+
+//function to get future weather info
+
+function futureWeather(cityInput) {
+  var queryUrl =
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
+    cityInput +
+    "&APPID=" +
+    apiKey +
+    "&units=imperial";
+  $.ajax({
+    url: queryUrl,
+    method: "GET",
+  }).then(function (response) {
+    for (i = 7; i < response.list.length; i += 8) {
+      var futureDate = $(
+        "<h5>" + moment.unix(response.list[i].dt).format("D/M/YYYY") + "</h5>"
+      );
+      var futureTemp = $(
+        "<div>" + "Temp: " + response.list[i].main.temp + " &deg;F" + "</div>"
+      );
+      var futureHumidity = $(
+        "<div>" + "Humidity: " + response.list[i].main.humidity + "%" + "</div>"
+      );
+      var futureIcon = response.list[i].weather[0].icon;
+      var futureWeatherIcon = $("<img>").attr(
+        "src",
+        "https://openweathermap.org/img/wn/" + futureIcon + "@2x.png"
+      );
+      var newCard = $("<div>").addClass("card").appendTo("#forecast-future");
+      var newCardBody = $("<div>").addClass("card-body").appendTo(newCard);
+      $(futureDate).addClass("card-title").appendTo(newCardBody);
+      $(futureWeatherIcon).appendTo(newCardBody);
+      $(futureTemp).addClass("card-text").appendTo(newCardBody);
+      $(futureHumidity).addClass("card-text").appendTo(newCardBody);
+    }
+  });
+}
+
+//onclick function so that when user clicks a past-searched city, that current and future forecasts appear
+$(document).on("click", ".list-group-item", function (event) {
+  $("#current-weather-card").empty();
+  $("#forecast-future").empty();
+  findWeather(event.target.innerHTML);
+  futureWeather(event.target.innerHTML);
+});
