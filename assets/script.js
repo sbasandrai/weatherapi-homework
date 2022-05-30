@@ -21,3 +21,19 @@ $(searchBtn).on("click", (event) => {
   renderCity();
   $("#search-city").val("");
 });
+
+//function to set cityInput to localStorage, adding it to the cities array
+function storeCity(cityInput) {
+  cities.push(cityInput);
+  localStorage.setItem("cities", JSON.stringify([...cities]));
+}
+
+//function to render past cities searched
+function renderCity() {
+  var cityDiv = $("#past-cities");
+  $(cityDiv).empty();
+  $.each(JSON.parse(localStorage.getItem("cities")), function (i, city) {
+    var newCity = $("<li>" + city + "</li>");
+    newCity.addClass("list-group-item").appendTo(cityDiv);
+  });
+}
