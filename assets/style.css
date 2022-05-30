@@ -1,0 +1,27 @@
+body {
+  background-color: rgb(22, 149, 240);
+}
+
+.weather-title {
+  color: #d9efef;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: bolder;
+}
+
+.jumbotron {
+  background-color: #150558;
+}
+
+main {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#city-search {
+  margin: 15px;
+}
+
+@media screen and (max-width: 750px) {
+  #current-city {
+    margin-left: 15px;
+  }
+}
