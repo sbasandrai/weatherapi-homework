@@ -18,7 +18,7 @@ THEN I am again presented with current and future conditions for that city
 
 ## Link to GitHub
 
-https://sbasandrai.github.io/weatherapi-homework/
+https://github.com/sbasandrai/weatherapi-homework
 
 ## Link to Deployed Application
 
